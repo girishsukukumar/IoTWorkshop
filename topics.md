@@ -58,6 +58,6 @@
   
    ```
 
-10. **Future of IoT **
+10. **Future of IoT**
 
 11. **Open house discussion with participants** 
