@@ -20,6 +20,7 @@
      8.2. IoT for Manfacturing Plants
      
          8.2.1. Condition Monitoroing on machines
+         
          8.2.2. Anomaly detection (Analytics in IoT)
          
      8.3. IoT for security application
