@@ -6,19 +6,19 @@
     
 2. **IoT Fundamentals**
 
-   ```This section will cover the concepts of Sensors & Actuators, which are used in IoT and how they integrate with a computer.  An integration of a simple digital sensor will be covered as a live hands-on session. The need of **Cyber Security** in IoT will also be discussed. A brief introduction to a **Real Time Operating system** will also be covered.```
+   ```This section will cover the concepts of Sensors & Actuators, which are used in IoT and how they integrate with a computer.  An integration of a simple digital sensor will be covered as a live hands-on session. The need of Cyber Security in IoT will also be discussed. A brief introduction to a Real Time Operating system will also be covered.```
 
 3. **IoT Platforms**
 
-   ```We will be discussing the what exactly it means by an IoT platform, what are basic components of an IoT platform, what are the commercial and opensource IoT platforms available and how we can make use of them for projects. This will cover IoT databases, Visualization, Authentication Data processing, some parts of Analytics, and other Utilities used by IoT Designers.```
+   ```We will discuss   what exactly is an IoT platform, what are the  basic components of an IoT platform, what are the commercial and opensource IoT platforms available and how we can make use of them in projects. This session will cover IoT databases, Visualization, Authentication, Data Processing, Basics of  Analytics, and other Utilities used by IoT Designers.```
 
 4. **Communications Technologies used for  IoT**
 
-   ``` Internet is the platform for communication between Devices and end users. However there are many Application layer technolgies like Webservices, MQTT etc were developed to solve specific problems , these along with concepts of Internet Protocol address, (IP address) will be covered. In addition, Physical communication Technologies, Like LoRA, ZigBEE, Bluetooth, NFC, WiFi will also be discussed.```
+   ``` Internet is the platform for communication between devices and end users. However, there are many Application Layer technolgies such as Webservices, MQTT etc., that were developed to solve specific problems. These, along with concepts of Internet Protocol Address, (IP address) will be covered. In addition, Physical Communication Technologies, such as LoRA, ZigBEE, Bluetooth, NFC, WiFi will also be discussed.```
 
 5. **IoT and Social Media Integration**
 
-   ``` IoT and social media has lot of interesting Uses cases which are yet to be deployed. For example can you think of a snack wending machine at your college/ office which tweets to you about the arrival of fresh stock, new snacks introduced, discounts etc to your mobile phone ? You can check with the wending machine from your mobile whether  it is functional and has stock of your favorite snack, and payment directly thorugh Google Pay instead of dropping currency ? We will discuss how we can design one such wending machine. ```
+   ``` IoT and social media have a lot of interesting use cases, which are yet to be deployed. For example, can you think of a snack vending machine at your college/ office which tweets to you about the arrival of fresh stock, new snacks introduced, discounts etc., to your mobile phone? You can check with the wending machine from your mobile whether it is functional and availability of your favorite snack, and payment directly thorugh Google Pay instead of dropping currency?.  We will discuss how we can design one such vending machine. ```
 
 
 6. **IoT Deployments for real world applications**
