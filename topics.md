@@ -2,7 +2,7 @@
 
 1. *Introduction to IoT, Cloud and Embedded Systems*
 
-    In this module we will discuss the basics of IoT , Embedded systems, Internet based communications & Cloud. How the concept of Iot Evolved along with Internet along with practical Use case of IoT
+    In this module we will discuss the basics of IoT , Embedded systems, Internet based communications & Cloud. How the concept of Iot Evolved along with Internet. One simple use case of IoT will be discussed.
     
 2. IoT Fundamentals 
 3. IoT Platforms
