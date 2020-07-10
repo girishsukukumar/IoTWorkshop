@@ -2,11 +2,11 @@
 
 1. **Introduction to IoT, Cloud and Embedded Systems**
 
-   ```In this module we will discuss the basics of IoT, IoT Devices , Embedded systems, Internet based communications & Cloud. How the concept of Iot Evolved along with Internet. One simple use case of IoT will be discussed.```
+   ```In this module we will discuss the basics of IoT, IoT Devices, Embedded systems, Internet based communications & Cloud Computing. How the concept of IoT evolved along with the internet. One simple use case of IoT will be discussed.```
     
 2. **IoT Fundamentals**
 
-   ```This section will cover the concepts of Sensors & Actuators which used in IoT and how they are integrated with a computer.  An interation of a simple digital sensor will be covered as live hands on session. Need to Cyber security in IoT will also be discussed. A brief Introduction of Real Time Operating system will also be covered.```
+   ```This section will cover the concepts of Sensors & Actuators, which are used in IoT and how they integrate with a computer.  An integration of a simple digital sensor will be covered as a live hands-on session. The need of **Cyber Security** in IoT will also be discussed. A brief introduction to a **Real Time Operating system** will also be covered.```
 
 3. **IoT Platforms**
 
