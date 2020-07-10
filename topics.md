@@ -5,11 +5,10 @@
     In this module we will discuss the basics of IoT, IoT Devices , Embedded systems, Internet based communications & Cloud. How the concept of Iot Evolved along with Internet. One simple use case of IoT will be discussed.
     
 2. **IoT Fundamentals**
-
-This section will cover the concepts of Sensors & Actuators which used in IoT and how they are integrated with a computer.  An interation of a simple digital sensor will be covered as live hands on session. Need to Cyber security in IoT will also be discussed. A brief Introduction of Real Time Operating system will also be covered.
+     This section will cover the concepts of Sensors & Actuators which used in IoT and how they are integrated with a computer.  An interation of a simple digital sensor will be covered as live hands on session. Need to Cyber security in IoT will also be discussed. A brief Introduction of Real Time Operating system will also be covered.
 
 3. **IoT Platforms**
-We will be discussing the what exactly it means by an IoT platform, what are basic components of an IoT platform, what are the commercial and opensource IoT platforms available and how we can make use of them for projects. This will cover IoT databases, Visualization, Authentication Data processing, some parts of Analytics, and other Utilities used for
+     We will be discussing the what exactly it means by an IoT platform, what are basic components of an IoT platform, what are the commercial and opensource IoT platforms available and how we can make use of them for projects. This will cover IoT databases, Visualization, Authentication Data processing, some parts of Analytics, and other Utilities used for
 by IoT Designers.
 
 4. **Communications Technologies used for  IoT**
