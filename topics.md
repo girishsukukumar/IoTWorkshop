@@ -1,6 +1,8 @@
 # IoT Workshop Plan
 
-1. What is IoT
+1. Introduction to IoT, Cloud and Embedded Systems
+    In this module we will discuss the basics of IoT , Embedded systems, Internet based communications & Cloud. How the concept of Iot Evolved along with Internet along with practical Use case of IoT
+    
 2. IoT Fundamentals 
 3. IoT Platforms
 4. Communications Technologies used for  IoT
