@@ -23,11 +23,11 @@
 
 6. **IoT Deployments for real world applications**
 
-   ``` What is that is needed to develop a real world IoT application like tools, programming languages, hardware boards, sensors and actuators, mark up languages will be discussed here. We will take a End of use case and see how these are used in building a real world application ```
+   ``` What is it that is needed to develop a real world IoT application? Essentials like, development tools, programming languages, hardware boards, sensors and actuators, mark-up languages will be discussed here. We will take an end to end use case and see how these are used in building a real world application. ```
 
 7. **Advanced IoT**
 
-   ```Machine Learning & Artificial intellegence has found in connection with IoT too. IoT is a rich field for applying  Machine learning.  We will explain what exactly is ML and how it is used in IoT with a practical illustration.```
+   ```Machine Learning & Artificial intellegence has found it's connection with IoT too. IoT is a rich field for applying  Machine learning.  We will discuss what  is ML and how it is used in IoT, with a practical illustration.```
 
 8. **IoT Case studies**
 
@@ -41,26 +41,23 @@
         
      8.2. **IoT for Manfacturing Plants**
      ```
-         8.2.1. Condition Monitoroing on machines
+         8.2.1. Condition Monitoring of equipments 
          8.2.2. Anomaly detection (Analytics in IoT)
      ```
      
      8.3. **IoT for security application**
      
-         ```8.3.1 Apart for Camera what are the other options for available for security ```
+         ```8.3.1 Apart from camera what are the other options, available for security ```
          
-9. **Hands-on with Iot (Live)**
+9. **Demo of IoT (Live)**
 
    ```
-   9.1. Simple Weather monitoring stations (no wind speed at the moment)
+   9.1. Simple Weather monitoring station (no wind speed at the moment)
    
    9.2. Industrial Equipment Monitoring (called Condition Monitoring)
-   
-   9.3. Health Monitoring 
-   
-   9.4. Environmental Monitoring
+  
    ```
 
-10. **Future Direction**
+10. **Future of IoT **
 
-11. **Open house discussion with Participants on their questions.**
+11. **Open house discussion with participants** 
