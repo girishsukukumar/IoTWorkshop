@@ -28,7 +28,7 @@ table#t01 {
 <body>
 
 <div id="demo">
-  <CENTER><h1>Green Leaf Farms </h1>
+  <CENTER><h1>Green Woods Farms </h1>
   <h4>Bangalore</h4> </CENTER>
 </div>
 
@@ -127,7 +127,7 @@ function loop()
          var jsonObject  = JSON.parse(this.responseText );
          motorStatus     = jsonObject.MotorStatus;
          amps            = jsonObject.Amps;
-         temperature     = jsonObject.Temperature;
+         temperatureC     = jsonObject.Temperature;
          humidity        = jsonObject.Humidity;
          rainStatus      = jsonObject.Raining;
          soilMoisture    = jsonObject.SoilMoisture;
@@ -142,21 +142,21 @@ function loop()
 
 
 
-   var str = "Motor Status: "+ motorStatus.toString();
-   str = str.fontsize("6"); // sets size of the text to 6
+   var str = "Motor Status: "+ motorStatus;
+   str = str.fontsize(4); // sets size of the text to 6
    //str = str.fontcolor("#006400"); // sets color of the text to #006400
    str = str.bold(); // makes text bold
    document.getElementById('motorstatus').innerHTML = str;
    
    var str = "Ampere: "+ amps.toString();
-   str = str.fontsize("6"); // sets size of the text to 6
+   str = str.fontsize(4); // sets size of the text to 6
    //str = str.fontcolor("#006400"); // sets color of the text to #006400
    str = str.bold(); // makes text bold
    document.getElementById('amps').innerHTML = str;
 
 
-   var str = "Temperature: "+ temperature.toString();
-   str = str.fontsize("6"); // sets size of the text to 6
+   var str = "Temperature: "+ temperatureC.toString();
+   str = str.fontsize(4); // sets size of the text to 6
    //str = str.fontcolor("#006400"); // sets color of the text to #006400
    str = str.bold(); // makes text bold
    document.getElementById('temperature').innerHTML = str;
@@ -168,7 +168,7 @@ function loop()
    document.getElementById('humidity').innerHTML = str;
 
    str = "Rain: "+ rainStatus;
-   str = str.fontsize(fontSize); // sets size of the text to 6
+   str = str.fontsize(4); // sets size of the text to 6
    //str = str.fontcolor("#006400"); // sets color of the text to #006400
    str = str.bold(); // makes text bold
    document.getElementById('rainstatus').innerHTML = str;
@@ -204,7 +204,7 @@ function mystartup(){
 var kickstart     = new mystartup();
 var motorStatus     = "Not Running" ;
 var amps            = 0 ;
-var temperature     = 0 ;
+var temperatureC     = 0 ;
 var humidity        = 0 ;
 var rainStatus      = "Not Raining" ;
 var soilMoisture    = 0 ;
@@ -248,32 +248,20 @@ table#t01 {
    <Td> <div id="motorstatus"></div> </td>
    <Td> <div id="amps"></div> </td>
 </TR>
-
-<!--
 <TR> 
-   <TI> <Td> <div id="distance"></div> </td></TI>
-   <TI> <Td> <div id="totaldistance"></div> </td></TI>
+   <Td> <div id="temperature"></div> </td>
+   <Td> <div id="humidity"></div> </td>
 </TR>
-
-</TABLE>
-<hr>
-<table border="5">
-
 <TR> 
-   <TI> <Td> <div id="currenttime"></div> </td></TI>
-   <TI> <Td> <div id="rideduration"></div> </td></TI>
+   <Td> <div id="rainstatus"></div> </td>
+   <Td> <div id="soilMoisture"></div> </td>
+</TR>
+<TR> 
+   <Td> <div id="flowRate"></div> </td>
+   <Td> <div id="windSpeed"></div> </td>
 </TR>
 
-<TR>
-   <TI> <Td> <div id="hb"></div> </td></TI>
-   <TI> <Td> <div id="bodyTemperature"></div> </td></TI> 
-</TR>
-<TR>
-   <TI> <Td> <div id="bikestatus"></div> </td></TI>
-   <TI> <Td> <div id="satellites"></div> </td></TI>
-</TR>
--->
-</Table>
+</table>
 <hr>
 
 
