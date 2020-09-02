@@ -79,6 +79,10 @@ NTPClient     timeClient(ntpUDP);
 
 int        idx =0 ;
 
+TaskHandle_t ReadTempAndHumidityHandle ;
+TaskHandle_t ReadAmpsHandle ;
+TaskHandle_t ReadRainAndMoistureHandle ;
+TaskHandle_t ReadFlowRateHandle ;
 
 typedef struct configData 
 {
@@ -207,12 +211,12 @@ void FileUpload()
 
 void RebootDevice()
 {
+    webServer.sendHeader("Connection", "close");
+    webServer.send(200, "text/html", "<HTML> <H1> Rebooting </H1> </HTML>");
     ESP.restart();
 }
 void DisplayLoginIndex()
 {
-//    webServer.sendHeader("Connection", "close");
-//    webServer.send(200, "text/html", loginIndex);
      File  file ;
      size_t  sent;
  
@@ -403,37 +407,57 @@ void DisplayConfigValues()
    DEBUG_PRINTF("Device name = %s ", ConfigData.wifiDeviceName);
 }
 
+
+
+void ReadTempAndHumidity(void *params)
+{
+  while(true)
+  {
+    vTaskDelay(10000); 
+  } 
+  
+}
+void ReadAmps(void *params)
+{
+  while(true)
+  {
+    vTaskDelay(1000); 
+  } 
+
+}
+
+void ReadRainAndMoisture(void *params)
+{
+  while(true)
+  {
+    vTaskDelay(10000); 
+  } 
+  
+}
+
+void ReadFlowRate(void *params)
+{
+  while(true)
+  {
+    vTaskDelay(10000); 
+  } 
+  
+}
 void ConfigureAsAccessPoint()
 {
-  
-}
-void ReadPersistantDataFromSPIFFS()
-{
-    File jsonFile ;
-  
-/*
-   {
-      "TotalDistance": 100000.1,
-      "TripDuration"  : 4000
-   }
-*/
+   IPAddress local_IP(192,168,4,4);
+   IPAddress gateway(192,168,5,5);
+   IPAddress subnet(255,255,255,0);
+   String gHotSpotIP ;
 
-   const size_t capacity = JSON_OBJECT_SIZE(1) + 20;
+   WiFi.softAP(ConfigData.wifiDeviceName, "12345689");  //Start HOTspot removing password will disable security
+   DEBUG_PRINTF("Wifi.softAP completed ");
+   WiFi.softAPConfig(local_IP, gateway, subnet);
+   IPAddress myIP = WiFi.softAPIP(); //Get IP address
+   gHotSpotIP = myIP.toString() ; 
+   DEBUG_PRINTF("%s\n",gHotSpotIP.c_str());
+   vTaskDelay(5000);
 
-   DynamicJsonDocument doc(capacity);
-   jsonFile = SPIFFS.open(JSON_PERSISTANT_FILE_NAME, FILE_READ);
-   if (jsonFile == NULL)
-   {
-     DEBUG_PRINTF("Unable to open %s",JSON_PERSISTANT_FILE_NAME);
-     return ;
-   }
-   deserializeJson(doc, jsonFile);
-
-}
-
-void WritePersistantDataToSPIFFS()
-{
-  
 }
 void setup() 
 {
@@ -444,7 +468,6 @@ void setup()
   SPIFFS.begin(true) ;
   pinMode(relayPin, OUTPUT);
   ReadConfigValuesFromSPIFFS();
-  ReadPersistantDataFromSPIFFS(); 
   DisplayConfigValues();
   DEBUG_PRINTF("Configuratio file reading : Success \n");
   if (ConnectToWifi() == false)
@@ -472,16 +495,43 @@ void setup()
   DEBUG_PRINTF("WeSuccessb Server configuration: Success \n");
   delay(2000);
 
-#if 0
+
   xTaskCreatePinnedToCore(
-                    ComputeValues,   /* Task function. */
-                    "Task1",     /* name of task. */
+                    ReadTempAndHumidity,   /* Task function. */
+                    "ReadTempAndHumidity",     /* name of task. */
                     10000,       /* Stack size of task */
                     NULL,        /* parameter of the task */
                     1,           /* priority of the task */
-                    &ComputeValuesTask,      /* Task handle to keep track of created task */
+                    &ReadTempAndHumidityHandle,      /* Task handle to keep track of created task */
+                    CORE_ZERO);          /* pin task to core 1 */  
+
+
+  xTaskCreatePinnedToCore(
+                    ReadAmps,   /* Task function. */
+                    "ReadAmps",     /* name of task. */
+                    10000,       /* Stack size of task */
+                    NULL,        /* parameter of the task */
+                    1,           /* priority of the task */
+                    &ReadAmpsHandle,      /* Task handle to keep track of created task */
+                    CORE_ONE);          /* pin task to core 1 */     
+ 
+  xTaskCreatePinnedToCore(
+                    ReadRainAndMoisture,   /* Task function. */
+                    "ReadRainAndMoisture",     /* name of task. */
+                    10000,       /* Stack size of task */
+                    NULL,        /* parameter of the task */
+                    1,           /* priority of the task */
+                    &ReadRainAndMoistureHandle,      /* Task handle to keep track of created task */
                     CORE_ONE);          /* pin task to core 1 */      
-#endif
+
+  xTaskCreatePinnedToCore(
+                    ReadFlowRate,   /* Task function. */
+                    "ReadFlowRate",     /* name of task. */
+                    10000,       /* Stack size of task */
+                    NULL,        /* parameter of the task */
+                    1,           /* priority of the task */
+                    &ReadFlowRateHandle,      /* Task handle to keep track of created task */
+                    CORE_ONE);          /* pin task to core 1 */      
 
 }
 
