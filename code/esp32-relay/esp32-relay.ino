@@ -16,6 +16,7 @@
 #include <NTPClient.h>
 #include "SPIFFS.h"
 #include <PubSubClient.h>
+#include "EmonLib.h"
 
 #include <ESP8266FtpServer.h>
 #include <Adafruit_Sensor.h>
@@ -105,10 +106,11 @@ typedef struct configData
   char     dataRequestTopic[HOST_NAME_LENGTH+USERNAME_NAME_LENGTH];
 };
 
-struct      configData ConfigData ;
-WiFiMulti   wifiMulti;          //  Create  an  instance  of  the ESP32WiFiMulti 
-bool        gMotorRunning           = false ;
-float gAmps         = 0.1   ; 
+struct         configData ConfigData ;
+EnergyMonitor  energyMonitor1 ;
+WiFiMulti      wifiMulti;          //  Create  an  instance  of  the ESP32WiFiMulti 
+bool  gMotorRunning = false ;
+double gAmps         = 0.1   ; 
 float gAirTemp      = 23.1  ;
 float gHumidity     = 57.1  ;
 bool  gRainStatus   = false ;
@@ -116,7 +118,7 @@ float gSoilMoisture = 63.3  ;
 float gFlowRate     = 44.1  ;
 float gWindSpeed    = 20.7  ;
 const int relayPin  = 26    ;
-int         gMqttLastPublishedTime = 0   ;
+int   gMqttLastPublishedTime = 0   ;
  
 WiFiClientSecure WifiSecureClientForMQTT;
 WiFiClient       WifiClientForMQTT  ;
@@ -169,12 +171,10 @@ void DisplayserverIndex()
          webServer.sendHeader("Connection", "close");
          webServer.send(200, "text/html", "<HTML> <H1> File Sensor.html not found </H1> </HTML>");
      }
-
-
 }
 void ChangeDetails()
 {
-      File  file ;
+     File  file ;
      size_t  sent;
  
      if (SPIFFS.exists("/config.html"))  
@@ -188,7 +188,6 @@ void ChangeDetails()
          webServer.sendHeader("Connection", "close");
          webServer.send(200, "text/html", "<HTML> <H1> File loginIndex.html not found </H1> </HTML>");
      }
- 
 }
 void FileUpload()
 {
@@ -206,7 +205,6 @@ void FileUpload()
          webServer.sendHeader("Connection", "close");
          webServer.send(200, "text/html", "<HTML> <H1> File loginIndex.html not found </H1> </HTML>");
      }
-  
 }
 
 void RebootDevice()
@@ -411,16 +409,48 @@ void DisplayConfigValues()
 
 void ReadTempAndHumidity(void *params)
 {
+  
+    DHT_Unified   dht(DHTPIN, DHTTYPE);
+
+    sensors_event_t event;
+    dht.begin();
+
   while(true)
   {
-    vTaskDelay(10000); 
+    
+       dht.temperature().getEvent(&event);
+       DEBUG_PRINTF("Temp = %f \n",event.temperature);
+       if (isnan(event.temperature) == false) 
+       {
+         gAirTemp = event.temperature ;
+       }
+       else
+       {
+          DEBUG_PRINTF("Error in reading temp \n");
+       }      
+       dht.humidity().getEvent(&event);
+       
+       DEBUG_PRINTF("Humudity = %f \n",event.relative_humidity);
+
+       if (isnan(event.relative_humidity) == false) 
+       {
+         gHumidity = event.relative_humidity ;
+       }
+       else
+       {
+          DEBUG_PRINTF("Error in reading humudity \n");
+       }
+       vTaskDelay(10000); 
   } 
   
 }
 void ReadAmps(void *params)
 {
+  
   while(true)
   {
+    gAmps = energyMonitor1.calcIrms(1480);  // Calculate Irms only
+    DEBUG_PRINTF("%f\n",gAmps*230.0);           // Apparent power
     vTaskDelay(1000); 
   } 
 
@@ -461,6 +491,7 @@ void ConfigureAsAccessPoint()
 }
 void setup() 
 {
+  
   int     GMTOffset = 19800;
   Serial.begin(115200);
   DEBUG_PRINTF("Motor Control");
