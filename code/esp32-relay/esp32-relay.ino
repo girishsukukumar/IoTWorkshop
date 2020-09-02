@@ -28,8 +28,8 @@
 #include "MAX30105.h"
 #include "heartRate.h"
 #include "spo2_algorithm.h"
-//#define   DEBUG 1 
-#define  NETWORK_DEBUG 1
+#define   DEBUG 1 
+//#define  NETWORK_DEBUG 1
 
 #ifdef NETWORK_DEBUG
     #define    DEBUG_PRINTF(f,...)  Debug.printf(f,##__VA_ARGS__)
@@ -76,23 +76,8 @@ WebServer     webServer(WEBSERVER_PORT);
 RemoteDebug   Debug;
 WiFiUDP       ntpUDP;
 NTPClient     timeClient(ntpUDP);
-MAX30105      maxSensor;
 
-const byte RATE_SIZE = 4; //Increase this for more averaging. 4 is good.
-byte       rates[RATE_SIZE]; //Array of heart rates
-byte       rateSpot = 0;
-long       lastBeat = 0; //Time at which the last beat occurred
-float      beatsPerMinute;
-int        beatAvg = 0 ;
-int        prevBeatAvg = 0 ;
-int        listOfTenSamples[SAMPLE_SIZE];
 int        idx =0 ;
-int PowerTable[60] = {0,0,0 ,1,3,7, 10,15,21,25,30,35,40,45,50,
-                      55,65,70,75,80,90,100,105,115,125,135,145,
-                      155,165,180,190,210,220,240,250,265,280,300,
-                      320,330,345,360,380,410,430,450,480,500,
-                      530,550,575,610,640,675,72,750,790,825,
-                      860,900};
 
 
 typedef struct configData 
@@ -103,7 +88,7 @@ typedef struct configData
   char     password2[SSID_PASSWD_LEN] ;
   char     ssid3[SSID_NAME_LEN] ;
   char     password3[SSID_PASSWD_LEN] ;
-  float    wheelCirumference ;
+
   char     wifiDeviceName[NAME_LEN] ;  
   char     userName[NAME_LEN];
   bool     sendDataToinFlux ;
@@ -118,27 +103,17 @@ typedef struct configData
 
 struct      configData ConfigData ;
 WiFiMulti   wifiMulti;          //  Create  an  instance  of  the ESP32WiFiMulti 
-bool        motorRunning           = false ;
-
-const int relayPin = 26;
-
+bool        gMotorRunning           = false ;
+float gAmps         = 0.1   ; 
+float gAirTemp      = 23.1  ;
+float gHumidity     = 57.1  ;
+bool  gRainStatus   = false ;
+float gSoilMoisture = 63.3  ;
+float gFlowRate     = 44.1  ;
+float gWindSpeed    = 20.7  ;
+const int relayPin  = 26    ;
 int         gMqttLastPublishedTime = 0   ;
  
-const int      PULSE_INPUT = 34  ;
-const byte     CADENCE_PIN = 18  ;
-const byte     SPEED_PIN   = 19  ;
-const int      THRESHOLD   = 550 ;   // Adjust this number to avoid noise when idle
-
-volatile byte  prevCadenceTicks = 0 ; // Only for debugging
-volatile byte  cadenceTicks     = 0 ;
-volatile byte  speedTicks       = 0 ;
-TaskHandle_t   ComputeValuesTask;
-TaskHandle_t   DisplayValuesTask ;
-TaskHandle_t   MeasureHeartRateTask ;
-TaskHandle_t   MeasureTempHumidityTask ;
-
-char            recordFileName[NAME_LEN];
-
 WiFiClientSecure WifiSecureClientForMQTT;
 WiFiClient       WifiClientForMQTT  ;
 PubSubClient     MQTTPubSubClient(WifiClientForMQTT);
@@ -166,9 +141,9 @@ bool ConnectToWifi()
   WiFi.setHostname(ConfigData.wifiDeviceName);
   DEBUG_PRINTF("\n");   
   DEBUG_PRINTF("Connected to  ");   
-  DEBUG_PRINTF("%s\n",WiFi.SSID().c_str());         
+  DEBUG_PRINTF("%s \n",WiFi.SSID().c_str());         
   DEBUG_PRINTF("IP  address: ");   
-  DEBUG_PRINTF("%s",WiFi.localIP().toString()); 
+  DEBUG_PRINTF("%s\n\n",WiFi.localIP().toString().c_str()); 
   WiFi.softAPdisconnect (true);   //Disable the Access point mode.
   return true ;
 }
@@ -280,27 +255,29 @@ void PostDetails()
 
   char jsonString[250];
 
-  if (motorRunning == true)
+  if (gMotorRunning == true)
   {
-    doc["MtrStatus"]  = "Running";
+    doc["MotorStatus"]  = "Running";
   }
   else
   {
     doc["MotorStatus"]  = "Stopped";
   }
 
-/*
-  doc["Amps"]         = round(gRPM);
-  doc["Temperature"]  = round(gDistanceKM);
-  doc["Humidity"]     = round(gTotalDistance);
-  doc["Raining"]      = round(gPulseRate);
-  doc["SoilMoisture"] = "Moving";
-  doc["WaterFlow"]    = durationStr;
-  doc["WindSpeed"]    = gRoomTemp ;
-*/   
+
+  doc["Amps"]         = gAmps; 
+  doc["Temperature"]  = gAirTemp ;
+  doc["Humidity"]     = gHumidity ;
+  doc["Raining"]      = gRainStatus ;
+  doc["SoilMoisture"] = gSoilMoisture;
+  doc["WaterFlow"]    = gFlowRate ;
+  doc["WindSpeed"]    = gWindSpeed ;
+
   serializeJson(doc, jsonString);
   webServer.sendHeader("Connection", "close");
   webServer.send(200, "json", jsonString);
+
+
 }
 void UpdateConfigJson()
 {
@@ -309,14 +286,16 @@ void UpdateConfigJson()
 
 void StartMotor()
 {
-  motorRunning = true ;
+  gMotorRunning = true ;
   digitalWrite(relayPin, HIGH);
+  DisplayserverIndex();
 }
 
 void StopMotor()
 {
-    motorRunning = false ;
-    digitalWrite(relayPin, LOW);
+    gMotorRunning = false ;
+    digitalWrite(relayPin, LOW);   
+    DisplayserverIndex();
 }
 
 void setupWebHandler()
@@ -386,7 +365,6 @@ void ReadConfigValuesFromSPIFFS()
   const char* password2 = doc["password2"]; // "xxxxxxxxxxxxxxxxxxxx"
   const char* ssid3 = doc["ssid3"]; // "xxxxxxxxxxxxxxxxxxxx"
   const char* password3 = doc["password3"]; // "xxxxxxxxxxxxxxx"
-  float wheelDiameter = doc["wheelDiameter"]; // 85.99
   const char* devicename = doc["devicename"]; // "xxxxxxxxxxxxxx"
   jsonFile.close();
   
@@ -399,8 +377,6 @@ void ReadConfigValuesFromSPIFFS()
   strcpy(ConfigData.ssid3,ssid3);
   strcpy(ConfigData.password3,password3);
 
-  ConfigData.wheelCirumference = (3.14 * wheelDiameter)/100 ;// in meters
-  strcpy(ConfigData.wifiDeviceName,devicename);
 
 //TODO Items for config file 
   strcpy(ConfigData.mqttServer, "platform.i2otlabs.com");
@@ -424,11 +400,8 @@ void DisplayConfigValues()
    DEBUG_PRINTF("ssid3 %s \n",ConfigData.ssid3);
    DEBUG_PRINTF("Password3 %s \n", ConfigData.password3);
 
-   DEBUG_PRINTF("Wheel Circumference = %f\n", ConfigData.wheelCirumference);
    DEBUG_PRINTF("Device name = %s ", ConfigData.wifiDeviceName);
 }
-
-
 
 void ConfigureAsAccessPoint()
 {
@@ -455,13 +428,7 @@ void ReadPersistantDataFromSPIFFS()
      return ;
    }
    deserializeJson(doc, jsonFile);
-#if 0
-   float TotalDistance = doc["TotalDistance"]; 
-   int TripDuration    = doc["TripDuration"]; // 4000
 
-   gTotalDistance = TotalDistance ;
-   gtripDuration  = TripDuration ;
-#endif
 }
 
 void WritePersistantDataToSPIFFS()
