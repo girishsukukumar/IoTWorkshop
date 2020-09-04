@@ -5,4 +5,7 @@ https://realpython.com/twitter-bot-python-tweepy/
 https://developer.twitter.com/en/portal/projects-and-apps
 https://openenergymonitor.org/
 https://www.savjee.be/2020/02/home-energy-monitor-v2/
+https://randomnerdtutorials.com/install-esp32-filesystem-uploader-arduino-ide/
+https://randomnerdtutorials.com/esp32-relay-module-ac-web-server/
+https://randomnerdtutorials.com/esp32-mqtt-publish-subscribe-arduino-ide/
 https://mqtt.org/getting-started/
